@@ -57,7 +57,7 @@ class Tensor:
     def shape(self):
         return self.data.shape
 
-    # --- Backward pass ---
+    # -- Backward pass
 
     def backward(self):
         """Computes the gradient of this Tensor with respect to every Tensor in the graph."""
@@ -86,7 +86,7 @@ class Tensor:
     def zero_grad(self):
         self.grad = np.zeros_like(self.data)
 
-    # --- Addition, subtraction, product and division (with broadcasting) ---
+    # -- Addition, subtraction, product and division (with broadcasting)
 
     def __add__(self, other):
         other = to_tensor(other)
@@ -148,7 +148,7 @@ class Tensor:
     def __rtruediv__(self, other):
         return to_tensor(other) / self
 
-    # --- Matrix multiplication ---
+    # -- Matrix multiplication
 
     def __matmul__(self, other):
         other = to_tensor(other)
@@ -184,7 +184,7 @@ class Tensor:
     def __rmatmul__(self, other):
         return to_tensor(other) @ self
 
-    # --- Powers, roots, exponentials and logarithms ---
+    # -- Powers, roots, exponentials and logarithms
 
     def __pow__(self, exponent):
         # tensor ** tensor is written with other operations of the engine:
@@ -234,7 +234,7 @@ class Tensor:
         out.backward_step = backward_step
         return out
 
-    # --- Summation ---
+    # -- Summation
 
     def sum(self, axis=None, keepdims=False):
         out = Tensor(self.data.sum(axis=axis, keepdims=keepdims), (self,), "sum")
@@ -252,7 +252,7 @@ class Tensor:
     def mean(self):
         return self.sum() / self.data.size
 
-    # --- Activation functions ---
+    # -- Activation functions
 
     def relu(self):
         out = Tensor(np.maximum(self.data, 0.0), (self,), "relu")
