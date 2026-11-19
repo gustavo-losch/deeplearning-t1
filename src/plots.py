@@ -9,7 +9,9 @@ import numpy as np
 def finish_figure(figure, save_path):
     figure.tight_layout()
     if save_path is not None:
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        folder = os.path.dirname(save_path)
+        if folder:
+            os.makedirs(folder, exist_ok=True)
         figure.savefig(save_path, dpi=120)
     plt.show()
 
