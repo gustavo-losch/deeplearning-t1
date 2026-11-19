@@ -1,6 +1,6 @@
-.* 
+.*
 !.gitignore
 
-data
-*pycache*
+data/
+__pycache__/
 *.pyc
