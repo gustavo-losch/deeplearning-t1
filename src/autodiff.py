@@ -161,8 +161,28 @@ class Tensor:
         out = Tensor(self.data @ other.data, (self, other), "@")
 
         def backward_step():
-            self.grad += out.grad @ other.data.T
-            other.grad += self.data.T @ out.grad
+            a, b, g = self.data, other.data, out.grad
+
+            # Dot product: both operands are vectors.
+            if a.ndim == 1 and b.ndim == 1:
+                self.grad += g * b
+                other.grad += g * a
+                return
+
+            # Promote 1D operands to 2D so the same formulas work for every case.
+            a2 = a[None, :] if a.ndim == 1 else a
+            b2 = b[:, None] if b.ndim == 1 else b
+            g2 = g
+            if a.ndim == 1:
+                g2 = np.expand_dims(g2, -2)
+            if b.ndim == 1:
+                g2 = np.expand_dims(g2, -1)
+
+            grad_a = unbroadcast(g2 @ np.swapaxes(b2, -1, -2), a2.shape)
+            grad_b = unbroadcast(np.swapaxes(a2, -1, -2) @ g2, b2.shape)
+
+            self.grad += grad_a.reshape(a.shape)
+            other.grad += grad_b.reshape(b.shape)
 
         out.backward_step = backward_step
         return out
