@@ -110,9 +110,7 @@ class MLP:
             params.append(layer.b)
         return params
 
-    # ------------------------------------------------------------------
-    # Export / import
-    # ------------------------------------------------------------------
+    # --- Export / import ---
 
     def save(self, path):
         """Saves topology and weights in a single .npz file.
