@@ -121,7 +121,7 @@ def plot_gradient_sizes(history, title="Gradient size per layer", save_path=None
     plt.yscale("log")
     if ylim is not None:
         plt.ylim(ylim)
-    plt.xlabel("layer (1 = closest to the input)")
+    plt.xlabel("layer")
     plt.ylabel("mean |gradient|")
     plt.title(title)
     plt.legend()
