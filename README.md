@@ -34,6 +34,7 @@ from src.nn import MLP
 from src.optim import Adam
 from src.training import train
 
+# X_train / X_val are already preprocessed (see the notebooks).
 model = MLP(input_size=4, hidden_sizes=[8], output_size=3,
             hidden_activation="tanh", output_activation="sigmoid", init="xavier")
 optimizer = Adam(model.parameters(), lr=0.01)
@@ -43,3 +44,30 @@ model.save("models/my_model.npz")
 model = MLP.load("models/my_model.npz")
 predictions = model.predict(X_val)
 ```
+
+## Preprocessing
+
+`MLP` stores only the topology and weights, as required by the assignment. The data preprocessing is
+not embedded in the model file, and `predict` expects inputs that were transformed in the same way as
+during training.
+
+The notebooks standardize the features with the training statistics:
+
+```python
+X_train, X_val = standardize(X_train, X_val)
+predictions = model.predict(X_val)
+```
+
+For inference from raw values, apply the training mean and standard deviation first:
+
+```python
+# raw_X_train is the training set before standardization.
+feature_mean = raw_X_train.mean(axis=0)
+feature_std = raw_X_train.std(axis=0) + 1e-8
+scaled_X = (raw_X - feature_mean) / feature_std
+predictions = model.predict(scaled_X)
+```
+
+In the Boston example the target is standardized as well, so the output must be converted back to the
+original scale. Keep the preprocessing statistics in a separate file or pipeline if a self-contained
+inference artifact is needed; they do not belong to the network itself.
