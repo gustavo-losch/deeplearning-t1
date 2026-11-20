@@ -34,7 +34,6 @@ from src.nn import MLP
 from src.optim import Adam
 from src.training import train
 
-# X_train / X_val are already preprocessed (see the notebooks).
 model = MLP(input_size=4, hidden_sizes=[8], output_size=3,
             hidden_activation="tanh", output_activation="sigmoid", init="xavier")
 optimizer = Adam(model.parameters(), lr=0.01)
@@ -61,7 +60,6 @@ predictions = model.predict(X_val)
 For inference from raw values, apply the training mean and standard deviation first:
 
 ```python
-# raw_X_train is the training set before standardization.
 feature_mean = raw_X_train.mean(axis=0)
 feature_std = raw_X_train.std(axis=0) + 1e-8
 scaled_X = (raw_X - feature_mean) / feature_std
